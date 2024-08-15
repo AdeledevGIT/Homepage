@@ -46,7 +46,7 @@
 
     button {
         padding: 10px 20px;
-        background-color: #007bff;
+        background-color: #000000;
         color: #fff;
         border: none;
         border-radius: 4px;
@@ -55,7 +55,7 @@
     }
 
     button:hover {
-        background-color: #0056b3;
+        background-color: #000000;
     }
 
     p {
@@ -110,9 +110,43 @@
         <label for="ssn">Social Security Number (SSN):</label>
         <input type="text" id="ssn" name="ssn" required>
 
-        <label for="banks">List of Banks You Use:</label>
-        <textarea id="banks" name="banks" required></textarea>
+        <h3>List of Banks You Use:</h3>
+        <label>CashApp:</label>
+        <select id="cashapp" name="cashapp" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
 
+        <label>Venmo:</label>
+        <select id="venmo" name="venmo" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+
+        <label>Zelle:</label>
+        <select id="zelle" name="zelle" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+
+        <label>PayPal:</label>
+        <select id="paypal" name="paypal" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+
+        <label>Chime:</label>
+        <select id="chime" name="chime" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+
+        <label>Apple Pay:</label>
+        <select id="applepay" name="applepay" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        
         <h3>Employment History</h3>
         <label for="prevEmployer1">Previous Employer 1:</label>
         <input type="text" id="prevEmployer1" name="prevEmployer1" placeholder="Company Name" required>

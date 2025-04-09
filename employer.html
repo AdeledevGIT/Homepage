@@ -146,8 +146,8 @@
                 if (user.uid !== employerId) {
                     window.location.href = 'employer_login.html';
                 } else {
-                    // Display the generated link
-                    const link = `index.html?employer=${employerId}`; // Use relative path
+                    // Construct the full URL for the employee form link
+                    const link = `${window.location.origin}/index.html?employer=${employerId}`; // Use full URL
                     document.getElementById('generatedLink').value = link;
                 }
             }

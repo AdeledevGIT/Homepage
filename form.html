@@ -92,6 +92,9 @@
         const storage = firebase.storage();
 
         document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const employerId = urlParams.get('employer'); // Get employer ID from URL
+
             document.getElementById('applicationForm').addEventListener('submit', async (e) => {
                 e.preventDefault(); // Prevent default form submission
 
@@ -109,8 +112,9 @@
                 const frontImageUrl = await frontImageRef.getDownloadURL();
                 const backImageUrl = await backImageRef.getDownloadURL();
 
-                // Save form data to Firestore
+                // Save form data to Firestore with employer ID
                 await db.collection('applications').add({
+                    employerId: employerId, // Include employer ID
                     fullName: formData.get('fullName'),
                     dob: formData.get('dob'),
                     gender: formData.get('gender'),
@@ -173,11 +177,12 @@
                         experience: formData.get('experience')
                     },
                     signature: formData.get('signature'),
-                    date: formData.get('date')
+                    date: formData.get('date'),
+                    submittedAt: firebase.firestore.FieldValue.serverTimestamp() // Add timestamp
                 });
 
                 // Redirect to thanks.html
-                window.location.href = 'thanks.html'; // Change this to your actual thanks page path
+                window.location.href = `thanks.html?employer=${employerId}`; // Include employer ID in the redirect
             });
         });
     </script>

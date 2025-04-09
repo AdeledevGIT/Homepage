@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustPay Agency - Employer Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="tpa.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .signup-link a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #000;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCC0cGcsdiMmeTYp2gNCjpO_XrJFE4Uj-g",
+            authDomain: "trustpay-d9d40.firebaseapp.com",
+            projectId: "trustpay-d9d40",
+            storageBucket: "trustpay-d9d40.appspot.com",
+            messagingSenderId: "835444953806",
+            appId: "1:835444953806:web:9231281cd19c075b7a769f",
+            measurementId: "G-5LRE3395RT"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    // Check if the user exists in the employers collection
+                    const employerDoc = await db.collection('employers').doc(user.uid).get();
+                    if (employerDoc.exists) {
+                        window.location.href = `employer.html?employer=${user.uid}`;
+                    } else {
+                        // If user exists in auth but not in employers collection, sign them out
+                        await auth.signOut();
+                        document.getElementById('errorMessage').textContent = 'Invalid credentials. Please try again.';
+                    }
+                }
+            });
+
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const errorMessage = document.getElementById('errorMessage');
+
+                try {
+                    // Sign in with email and password
+                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    
+                    // Check if the user exists in the employers collection
+                    const employerDoc = await db.collection('employers').doc(userCredential.user.uid).get();
+                    
+                    if (employerDoc.exists) {
+                        // User exists in employers collection, redirect to dashboard
+                        window.location.href = `employer.html?employer=${userCredential.user.uid}`;
+                    } else {
+                        // User doesn't exist in employers collection, sign them out
+                        await auth.signOut();
+                        errorMessage.textContent = 'Invalid credentials. Please try again.';
+                    }
+                } catch (error) {
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage.textContent = 'No account found with this email. Please sign up first.';
+                    } else if (error.code === 'auth/wrong-password') {
+                        errorMessage.textContent = 'Incorrect password. Please try again.';
+                    } else {
+                        errorMessage.textContent = error.message;
+                    }
+                }
+            });
+
+            document.getElementById('forgotPassword').addEventListener('click', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const errorMessage = document.getElementById('errorMessage');
+
+                if (!email) {
+                    errorMessage.textContent = 'Please enter your email address';
+                    return;
+                }
+
+                try {
+                    await auth.sendPasswordResetEmail(email);
+                    errorMessage.textContent = 'Password reset email sent. Please check your inbox.';
+                } catch (error) {
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage.textContent = 'No account found with this email. Please sign up first.';
+                    } else {
+                        errorMessage.textContent = error.message;
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="tpa.png" alt="TrustPay Agency Logo">
+            <h1>Employer Login</h1>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#" id="forgotPassword">Forgot Password?</a>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="signup-link">
+            Don't have an account? <a href="employer_signup.html">Sign Up</a>
+        </div>
+    </div>
+</body>
+</html> 

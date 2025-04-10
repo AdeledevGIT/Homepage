@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Application - TrustPay Agency</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="tpa.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            margin-bottom: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .value {
+            color: #333;
+        }
+
+        .id-images {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .id-images img {
+            max-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCC0cGcsdiMmeTYp2gNCjpO_XrJFE4Uj-g",
+            authDomain: "trustpay-d9d40.firebaseapp.com",
+            projectId: "trustpay-d9d40",
+            storageBucket: "trustpay-d9d40.appspot.com",
+            messagingSenderId: "835444953806",
+            appId: "1:835444953806:web:9231281cd19c075b7a769f",
+            measurementId: "G-5LRE3395RT"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const applicationId = urlParams.get('id');
+
+            if (!applicationId) {
+                window.location.href = 'employer.html';
+                return;
+            }
+
+            db.collection('applications').doc(applicationId).get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    displayApplication(data);
+                } else {
+                    alert('Application not found');
+                    window.location.href = 'employer.html';
+                }
+            });
+        });
+
+        function displayApplication(data) {
+            // Display all the application data in the appropriate sections
+            document.getElementById('fullName').textContent = data.fullName;
+            document.getElementById('dob').textContent = data.dob;
+            document.getElementById('gender').textContent = data.gender;
+            document.getElementById('address').textContent = `${data.address.street}, ${data.address.city}, ${data.address.state} ${data.address.zip}`;
+            document.getElementById('phone').textContent = data.phone;
+            document.getElementById('email').textContent = data.email;
+            document.getElementById('ssn').textContent = data.ssn;
+            
+            // Display ID images
+            document.getElementById('idFront').src = data.idCardFront;
+            document.getElementById('idBack').src = data.idCardBack;
+
+            // Display bank information
+            const banks = data.banks;
+            document.getElementById('banks').innerHTML = Object.entries(banks)
+                .map(([bank, hasAccount]) => `${bank}: ${hasAccount}`)
+                .join('<br>');
+
+            // Display employment history
+            const employmentHistory = data.employmentHistory;
+            document.getElementById('employmentHistory').innerHTML = employmentHistory
+                .map(job => `
+                    <div class="section">
+                        <h4>${job.employer}</h4>
+                        <p>Position: ${job.position}</p>
+                        <p>Duration: ${job.duration}</p>
+                        <p>Reason for leaving: ${job.reason}</p>
+                    </div>
+                `).join('');
+
+            // Display education
+            document.getElementById('education').innerHTML = `
+                <p>Level: ${data.education.level}</p>
+                <p>Institution: ${data.education.institution}</p>
+                <p>Field: ${data.education.field}</p>
+            `;
+
+            // Display skills and certifications
+            document.getElementById('skills').textContent = data.skills;
+            document.getElementById('certifications').textContent = data.certifications;
+
+            // Display references
+            const references = data.references;
+            document.getElementById('references').innerHTML = references
+                .map(ref => `
+                    <div class="section">
+                        <h4>${ref.name}</h4>
+                        <p>Relationship: ${ref.relationship}</p>
+                        <p>Phone: ${ref.phone}</p>
+                        <p>Email: ${ref.email}</p>
+                    </div>
+                `).join('');
+
+            // Display additional information
+            document.getElementById('reason').textContent = data.additionalInfo.reason;
+            document.getElementById('experience').textContent = data.additionalInfo.experience;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="tpa.png" alt="TrustPay Agency Logo" style="height: 50px;">
+            <h1>Application Details</h1>
+        </div>
+
+        <div class="section">
+            <h3>Personal Information</h3>
+            <div class="info-row">
+                <span class="label">Full Name:</span>
+                <span class="value" id="fullName"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Date of Birth:</span>
+                <span class="value" id="dob"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Gender:</span>
+                <span class="value" id="gender"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Address:</span>
+                <span class="value" id="address"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Phone:</span>
+                <span class="value" id="phone"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Email:</span>
+                <span class="value" id="email"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">SSN:</span>
+                <span class="value" id="ssn"></span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>ID Card Images</h3>
+            <div class="id-images">
+                <img id="idFront" alt="ID Card Front">
+                <img id="idBack" alt="ID Card Back">
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Bank Accounts</h3>
+            <div id="banks"></div>
+        </div>
+
+        <div class="section">
+            <h3>Employment History</h3>
+            <div id="employmentHistory"></div>
+        </div>
+
+        <div class="section">
+            <h3>Education</h3>
+            <div id="education"></div>
+        </div>
+
+        <div class="section">
+            <h3>Skills</h3>
+            <div id="skills"></div>
+        </div>
+
+        <div class="section">
+            <h3>Certifications</h3>
+            <div id="certifications"></div>
+        </div>
+
+        <div class="section">
+            <h3>References</h3>
+            <div id="references"></div>
+        </div>
+
+        <div class="section">
+            <h3>Additional Information</h3>
+            <div class="info-row">
+                <span class="label">Reason for applying:</span>
+                <span class="value" id="reason"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Experience:</span>
+                <span class="value" id="experience"></span>
+            </div>
+        </div>
+
+        <a href="employer.html" class="back-button">Back to Dashboard</a>
+    </div>
+</body>
+</html> 

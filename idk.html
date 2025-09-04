@@ -1,24 +1,202 @@
-<h1>Hook (first 3 seconds, high energy):
-👉 “<h2>I built this entire website from scratch… using AI!”</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily2k Dashboard</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  <style>
+    body {
+      background: #f58220;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .profile {
+      display: flex;
+      align-items: center;
+    }
+    .profile img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin: 10px;
+    }
+    .profile span {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000;
+    }
+    .switch-btn {
+      background: linear-gradient(to right, #00c853, #64dd17);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    .balance-card {
+      background: #000;
+      color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .balance-card .balance {
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .actions {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f5b895;
+      border-radius: 50%;
+      padding: 15px;
+      width: 60px;
+      height: 60px;
+      justify-content: center;
+      text-decoration: none;
+      color: #000;
+      font-size: 12px;
+    }
+    .ad-banner {
+      background: #000;
+      height: 100px;
+      border-radius: 10px;
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+    }
+    .side-nav {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+    .side-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 50%;
+      padding: 15px;
+      width: 60px;
+      height: 60px;
+      color: #fff;
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .weekly {
+      background: #673ab7;
+    }
+    .market {
+      background: #00bcd4;
+    }
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .bottom-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f5b895;
+      border-radius: 50%;
+      padding: 15px;
+      width: 60px;
+      height: 60px;
+      text-decoration: none;
+      color: #000;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
 
-Beat 2 (show quick screen of the site):
-<h2> “It took me 3 months and literally hundreds if not thousands of prompts.”</h2>
+  <div class="header">
+    <div class="profile">
+      <img id="profileImage" src="" alt="Profile">
+      <span id="username">Loading...</span>
+    </div>
+    <a href="advertiser.html" class="switch-btn">Switch to advertise</a>
+  </div>
 
-<h2> Its called Bink a link in bio platform just like linktree</h2>
+  <div class="balance-card">
+    <div class="balance-label">Balance</div>
+    <div class="balance" id="balance">0</div>
+    <div>Daily2k</div>
+    <div class="fullname">Fullname: <span id="fullname">Loading...</span></div>
+  </div>
 
-Beat 3 (cut to features):
-<h2>With BINK, you can track exactly which links people click on your bio, sell your products straight from your page, add YouTube videos, music, and even photos—all in one page.</h2>
+  <div class="actions">
+    <a href="task.html" class="action-btn"><i class="fa-solid fa-list-check"></i><div>Task</div></a>
+    <button class="action-btn" onclick="alert('This feature will be added soon!')"><i class="fa-solid fa-tv"></i><div>WatchADS</div></button>
+    <button class="action-btn" onclick="alert('This feature will be added soon!')"><i class="fa-solid fa-link"></i><div>Direct link</div></button>
+  </div>
 
-<h2>as a premium user you get weekly analytics email with details about your links and product from the previous week </h2>
+  <div class="ad-banner" id="adBanner">Loading ad...</div>
 
-Beat 4 (your story angle):
-<h2> “For the next 30 days, I’ll post daily—tracking how many users join, even if it’s zero. You’ll see everything.</h2>
+  <div class="side-nav">
+    <a href="weeklycontex.html" class="side-btn weekly"><i class="fa-solid fa-trophy"></i><div>Weekly</div></a>
+    <a href="market.html" class="side-btn market"><i class="fa-solid fa-store"></i><div>Market</div></a>
+  </div>
 
-Beat 5 (hype & hook):
-<h2>“also I’m not just posting videos—I’ll be DM’ing people offering them 3months free premium subscription, sharing responses, and even begging y’all to tag them until they notice me. They say success takes shamelessness… well, I want to succeed too.”</h2>
+  <div class="bottom-nav">
+    <a href="profile.html" class="bottom-btn"><i class="fa-solid fa-user"></i><div>Profile</div></a>
+    <a href="withdraw.html" class="bottom-btn"><i class="fa-solid fa-money-bill-wave"></i><div>Withdraw</div></a>
+    <a href="friend.html" class="bottom-btn"><i class="fa-solid fa-users"></i><div>Friends</div></a>
+  </div>
 
-<h2>I have already messaged a couple of content creators the likes of boyalone,Mateen,Samad and couple others that doesn't use a link in bio platform yet if you have any alternative ways of contacting any of this people pls dm me 
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-Call-to-action (last frame):
-<h2>“you can Join BINK through the link in my bio. And hey—drop a comment if you have a suggestion or slide in my dm also plz like and tag any of this mentioned individual. 👇”</h2>
-</h1>
+    // Load Profile Data
+    db.ref("users/user1").on("value", (snapshot) => {
+      const data = snapshot.val();
+      document.getElementById("username").textContent = data.username || "User";
+      document.getElementById("fullname").textContent = data.fullname || "N/A";
+      document.getElementById("balance").textContent = data.balance || "0";
+      document.getElementById("profileImage").src = data.profileImage || "https://via.placeholder.com/50";
+    });
+
+    // Load Banner Ad
+    db.ref("ads/banner").on("value", (snapshot) => {
+      const adText = snapshot.val();
+      document.getElementById("adBanner").textContent = adText || "No Ads Available";
+    });
+  </script>
+
+</body>
+</html>

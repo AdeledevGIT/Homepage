@@ -1,40 +1,143 @@
-<div class="profile-container">
-  <!-- Profile Picture -->
-  <div class="profile-pic">
-    <img src="default-avatar.png" alt="Profile Picture" id="profileImage">
-    <label for="fileInput" class="edit-icon">📷</label>
-    <input type="file" id="fileInput" style="display: none;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <style>
+    /* Container */
+    .profile-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Profile Picture */
+    .profile-pic {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .profile-pic img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ff6b35; /* Accent color */
+    }
+
+    .edit-icon {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background: #ff6b35;
+      color: white;
+      padding: 6px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      border: 2px solid white;
+    }
+
+    /* Stats Card */
+    .stats-card {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: #f7f7f7;
+      padding: 12px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .stat .number {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ff6b35;
+    }
+
+    .stat .label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* User Details */
+    .details {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .details p {
+      margin: 8px 0;
+      font-size: 15px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <!-- Profile Picture -->
+    <div class="profile-pic">
+      <img src="default-avatar.png" alt="Profile Picture" id="profileImage">
+      <label for="fileInput" class="edit-icon">📷</label>
+      <input type="file" id="fileInput" style="display: none;" accept="image/*">
+    </div>
+
+    <!-- Stats Card -->
+    <div class="stats-card">
+      <div class="stat">
+        <span class="number">120</span>
+        <span class="label">Ads Watched</span>
+      </div>
+      <div class="stat">
+        <span class="number">45</span>
+        <span class="label">Tasks Done</span>
+      </div>
+      <div class="stat">
+        <span class="number">₦12,500</span>
+        <span class="label">Earned</span>
+      </div>
+      <div class="stat">
+        <span class="number">₦5,000</span>
+        <span class="label">Withdrawn</span>
+      </div>
+      <div class="stat">
+        <span class="number">₦7,500</span>
+        <span class="label">Balance</span>
+      </div>
+    </div>
+
+    <!-- User Details -->
+    <div class="details">
+      <p><strong>Username:</strong> Adeyemi</p>
+      <p><strong>Email:</strong> ade@example.com</p>
+      <p><strong>Joined:</strong> Aug 2025</p>
+    </div>
   </div>
 
-  <!-- Stats Card -->
-  <div class="stats-card">
-    <div class="stat">
-      <span class="number">120</span>
-      <span class="label">Ads Watched</span>
-    </div>
-    <div class="stat">
-      <span class="number">45</span>
-      <span class="label">Tasks Done</span>
-    </div>
-    <div class="stat">
-      <span class="number">₦12,500</span>
-      <span class="label">Earned</span>
-    </div>
-    <div class="stat">
-      <span class="number">₦5,000</span>
-      <span class="label">Withdrawn</span>
-    </div>
-    <div class="stat">
-      <span class="number">₦7,500</span>
-      <span class="label">Balance</span>
-    </div>
-  </div>
+  <script>
+    // Profile picture preview update
+    const fileInput = document.getElementById("fileInput");
+    const profileImage = document.getElementById("profileImage");
 
-  <!-- User Details -->
-  <div class="details">
-    <p><strong>Username:</strong> Adeyemi</p>
-    <p><strong>Email:</strong> ade@example.com</p>
-    <p><strong>Joined:</strong> Aug 2025</p>
-    <!-- More details here -->
-  </div>
-</div>
+    fileInput.addEventListener("change", function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profileImage.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+</body>
+</html>

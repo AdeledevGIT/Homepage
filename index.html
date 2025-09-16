@@ -19,208 +19,448 @@
             });
         </script>
         <style>
+        :root {
+            --primary-color: #0056b3; /* Darker blue for primary actions/branding */
+            --secondary-color: #007bff; /* Lighter blue for accents */
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --white: #ffffff;
+            --gray-border: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light-bg);
             margin: 0;
             padding: 0;
-            color: #000;
+            color: var(--text-color);
+            line-height: 1.6;
         }
-
-        header {
-            background-color: #000;
-            color: #fff;
-            padding: 20px;
+        
+        /* General styles */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section {
+            padding: 80px 0;
             text-align: center;
+            background-color: var(--white);
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px var(--shadow);
+            border-radius: 8px;
         }
-
+        
+        .section h2 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+        
+        .section p {
+            font-size: 1.1em;
+            color: var(--text-color);
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--dark-bg);
+            color: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        header .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        header .logo h1 {
+            font-size: 1.8em;
+            margin: 0;
+            color: var(--white);
+        }
+        
         header nav a {
-            color: #fff;
+            color: var(--white);
             margin: 0 15px;
             text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
-
+        
+        header nav a:hover {
+            color: var(--secondary-color);
+        }
+        
+        /* Hero Section */
         .hero {
-            background: url('your-hero-image.jpg') no-repeat center center/cover;
-            height: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://via.placeholder.com/1500x800.png?text=Enterprise+Landing+Page+Hero') no-repeat center center/cover;
+            color: var(--white);
+            padding: 100px 0;
             text-align: center;
-            background-color: #000;
         }
-
+        
         .hero h1 {
-            font-size: 3em;
-        }
-
-        .hero p {
-            font-size: 1.2em;
-        }
-
-        .hero button {
-            padding: 10px 20px;
-            background-color: #fff;
-            color: #000;
-            border: none;
-            cursor: pointer;
-            font-size: 1em;
-        }
-
-        .section {
-            padding: 60px 20px;
-            max-width: 800px;
-            margin: auto;
-            background-color: #fff;
+            font-size: 3.5em;
             margin-bottom: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            line-height: 1.2;
         }
-
-        .section h2 {
-            text-align: center;
-            color: #000;
+        
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
-
-        .section p {
-            text-align: center;
-            font-size: 1.1em;
-            color: #000;
-        }
-
-        .how-it-works, .earnings {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        .how-it-works div, .earnings div {
-            display: flex;
-            align-items: center;
-        }
-
-        .how-it-works div i, .earnings div i {
-            font-size: 2em;
-            margin-right: 20px;
-        }
-
-        .footer {
-            background-color: #000;
-            color: #fff;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .footer a {
-            color: #fff;
+        
+        .btn-primary {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: var(--white);
             text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
         }
-
-        .contact-form input, .contact-form textarea {
-            width: 100%;
-            padding: 10px;
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        /* Features/How It Works/Earnings */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature-item {
+            background-color: var(--light-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-item i {
+            font-size: 3em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .feature-item h3 {
+            font-size: 1.5em;
+            color: var(--primary-color);
             margin-bottom: 10px;
-            border: 1px solid #000;
-            border-radius: 4px;
         }
-
-        .contact-form button {
-            padding: 10px 20px;
-            background-color: #000;
-            color: #fff;
-            border: none;
-            cursor: pointer;
+        
+        .feature-item p {
+            font-size: 1em;
+            color: var(--text-color);
+            margin-bottom: 0;
+        }
+        
+        /* Call to Action (Join Us) */
+        .cta-section {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+        
+        .cta-section h2 {
+            color: var(--white);
+            margin-bottom: 20px;
+        }
+        
+        .cta-section p {
+            color: var(--white);
+            margin-bottom: 30px;
+        }
+        
+        /* Contact Form */
+        .contact-form {
+            text-align: left;
+        }
+        
+        .contact-form form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--light-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--gray-border);
+            border-radius: 5px;
             font-size: 1em;
         }
-    </style> 
+        
+        .contact-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        
+        .contact-form button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--dark-bg);
+            color: var(--white);
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 30px;
+        }
+        
+        .footer p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+        
+        .footer a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            margin: 0 5px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: var(--white);
+        }
+        
+        .social-links {
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: var(--white);
+            font-size: 1.5em;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+        
+            .hero p {
+                font-size: 1.1em;
+            }
+        
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+        
+            header nav {
+                margin-top: 15px;
+            }
+        
+            header nav a {
+                margin: 0 10px;
+            }
+        
+            .section {
+                padding: 40px 15px;
+            }
+        
+            .section h2 {
+                font-size: 2em;
+            }
+        
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 <body> 
     <header>
-        <img src="tpa.png" alt="TrustPay Agency Logo" style="height: 50px;"> <!-- Adjust the path and style as needed -->
-        <h1>TrustPay Agency</h1>
-        <nav>
-            <a href="#about">About Us</a>
-            <a href="#services">Services</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#earnings">Earnings</a>
-            <a href="#join us">join us</a>
-            <a href="#contact">Contact Us</a>
-        </nav>
+        <div class="container">
+            <div class="logo">
+                <img src="tpa.png" alt="TrustPay Agency Logo">
+                <h1>TrustPay Agency</h1>
+            </div>
+            <nav>
+                <a href="#about">About Us</a>
+                <a href="#services">Services</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#earnings">Earnings</a>
+                <a href="#join-us">Join Us</a>
+                <a href="#contact">Contact Us</a>
+            </nav>
+        </div>
     </header>
 
-<div class="hero">
-    <div>
+<section class="hero">
+    <div class="container">
         <h1>Your Trusted Partner in Payment Handling</h1>
         <p>Reliable and secure transaction management by skilled professionals</p>
-        <button onclick="document.getElementById('about').scrollIntoView();">Learn More</button>
+        <a href="#about" class="btn-primary">Learn More</a>
     </div>
-</div>
+</section>
 
-<div id="about" class="section">
-    <h2>About Us</h2>
-    <p>At TrustPay Agency, we specialize in handling transactions and payments on behalf of our clients. Our team of professionals ensures that every transaction is managed with the utmost security and reliability.</p>
-</div>
-
-<div id="services" class="section">
-    <h2>Services</h2>
-    <p>We offer a range of services including transaction management, payment processing, and employee hiring for transaction handling.</p>
-</div>
-
-<div id="how-it-works" class="section">
-    <h2>How It Works</h2>
-    <div class="how-it-works">
-        <div>
-            <i class="fas fa-receipt"></i>
-            <p>Employees receive payments on behalf of the company.</p>
-        </div>
-        <div>
-            <i class="fas fa-shopping-cart"></i>
-            <p>Employees purchase Bitcoin using Cashapp.</p>
-        </div>
-        <div>
-            <i class="fas fa-wallet"></i>
-            <p>Employees send 90% of the received amount to the provided Bitcoin wallet.</p>
-        </div>
-        <div>
-            <i class="fas fa-dollar-sign"></i>
-            <p>Employees keep 10% of the received amount as their earnings.</p>
-        </div>
+<section id="about" class="section">
+    <div class="container">
+        <h2>About Us</h2>
+        <p>At TrustPay Agency, we specialize in handling transactions and payments on behalf of our clients. Our team of professionals ensures that every transaction is managed with the utmost security and reliability.</p>
     </div>
-</div>
+</section>
 
-<div id="earnings" class="section">
-    <h2>Earnings</h2>
-    <div class="earnings">
-        <div>
-            <i class="fas fa-money-bill-wave"></i>
-            <p>Earn 10% of every transaction you handle. For example, if you receive $100, you keep $10 and send $90 to the provided Bitcoin wallet.</p>
+<section id="services" class="section">
+    <div class="container">
+        <h2>Services</h2>
+        <p>We offer a range of services including transaction management, payment processing, and employee hiring for transaction handling.</p>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <i class="fas fa-exchange-alt"></i>
+                <h3>Transaction Management</h3>
+                <p>Secure and efficient handling of all your payment transactions.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-credit-card"></i>
+                <h3>Payment Processing</h3>
+                <p>Streamlined processing to ensure timely and accurate payments.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-users"></i>
+                <h3>Employee Hiring</h3>
+                <p>Find skilled professionals for your transaction handling needs.</p>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
-<div id="join us" class="section">
-    <h2>Join Us</h2>
-    <p>Join our team and start earning by handling transactions from home. 
-        <a id="applyNowLink" href="form.html">Apply Now</a>
-    </p>
-</div>
+<section id="how-it-works" class="section">
+    <div class="container">
+        <h2>How It Works</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <i class="fas fa-receipt"></i>
+                <h3>Receive Payments</h3>
+                <p>Employees receive payments on behalf of the company.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Purchase Bitcoin</h3>
+                <p>Employees purchase Bitcoin using Cashapp.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-wallet"></i>
+                <h3>Send 90%</h3>
+                <p>Employees send 90% of the received amount to the provided Bitcoin wallet.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-dollar-sign"></i>
+                <h3>Keep 10%</h3>
+                <p>Employees keep 10% of the received amount as their earnings.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-<div id="contact" class="section contact-form">
-    <h2>Contact Us</h2>
-    <form id="contact us" action="https://formsubmit.co/1a59537dc9884c86b32c846861880ad0" method="POST" enctype="multipart/form-data">
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="message" placeholder="Your Message" required></textarea>
-        <button type="submit">Send Message</button>
-    </form>
-</div>
+<section id="earnings" class="section">
+    <div class="container">
+        <h2>Earnings</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <i class="fas fa-money-bill-wave"></i>
+                <h3>Transparent Earnings</h3>
+                <p>Earn 10% of every transaction you handle. For example, if you receive $100, you keep $10 and send $90 to the provided Bitcoin wallet.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="join-us" class="section cta-section">
+    <div class="container">
+        <h2>Join Our Team</h2>
+        <p>Become a part of TrustPay Agency and start a rewarding career in transaction handling from the comfort of your home.</p>
+        <a id="applyNowLink" href="form.html" class="btn-primary">Apply Now</a>
+    </div>
+</section>
+
+<section id="contact" class="section contact-form">
+    <div class="container">
+        <h2>Contact Us</h2>
+        <form id="contact us" action="https://formsubmit.co/1a59537dc9884c86b32c846861880ad0" method="POST" enctype="multipart/form-data">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</section>
 
 <footer class="footer">
-    <p>&copy; 2024 TrustPay Agency. All rights reserved. | <a href="privacy_policy.html">Privacy Policy</a> | <a href="terms_of_service.html">Terms of Service</a></p>
-    <p>Follow us on:
-        <a href="#">LinkedIn</a> |
-        <a href="#">Twitter</a> |
-        <a href="#">Facebook</a>
-    </p>
+    <div class="container">
+        <p>&copy; 2024 TrustPay Agency. All rights reserved. | <a href="privacy_policy.html">Privacy Policy</a> | <a href="terms_of_service.html">Terms of Service</a></p>
+        <div class="social-links">
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter-square"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a>
+        </div>
+    </div>
 </footer>
 
 </body>

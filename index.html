@@ -9,12 +9,12 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const employerId = urlParams.get('employer'); // Get employer ID from URL
+                const employerId = urlParams.get('e'); // Get employer ID from URL (changed from 'employer' to 'e')
 
                 // Set the Apply Now link dynamically
                 if (employerId) {
                     const applyNowLink = document.getElementById('applyNowLink');
-                    applyNowLink.href = `form.html?employer=${employerId}`;
+                    applyNowLink.href = `form.html?e=${employerId}`;
                 }
             });
         </script>
@@ -187,8 +187,8 @@
         
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://via.placeholder.com/1500x800.png?text=Enterprise+Landing+Page+Hero') no-repeat center center/cover;
-            color: var(--white);
+            background: url('bg.jpg') no-repeat center center/cover;
+            color: rgb(255, 255, 255);
             padding: 100px 0;
             text-align: center;
         }

@@ -9,6 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script> <!-- Paystack Script -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -48,13 +49,85 @@
 
         .logout-btn {
             background-color: #fff;
-            width: 150px;
+            width: 100px; /* Reduced width */
             color: #000;
             border: none;
             padding: 10px 20px;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 14px; /* Slightly smaller font */
+        }
+
+        .header-right { /* New style for aligning logout and balance */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .token-balance { /* New style for token balance display */
+            color: #fff;
             font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .add-token-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 5px;
+        }
+
+        /* Overlay styles */
+        .overlay {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 2;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .dashboard {
@@ -133,26 +206,125 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
+        let currentEmployerId = null; // Global variable to store employerId
 
-        // Check authentication status
-        auth.onAuthStateChanged((user) => {
+        // Function to fetch and display employer token balance
+        async function getEmployerTokenBalance(employerId) {
+            try {
+                // In a real application, you would fetch this from your backend
+                // For now, we'll simulate it or fetch from Firestore if you have a collection
+                const employerRef = db.collection('employers').doc(employerId);
+                const doc = await employerRef.get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('employerTokenBalance').textContent = data.tokens || 0;
+                } else {
+                    console.log("No such employer document!");
+                    document.getElementById('employerTokenBalance').textContent = 0;
+                }
+            } catch (error) {
+                console.error("Error fetching token balance:", error);
+                document.getElementById('employerTokenBalance').textContent = 0;
+            }
+        }
+
+        // Modified authStateChanged to load balance
+        auth.onAuthStateChanged(async (user) => {
             if (!user) {
                 window.location.href = 'employer_login.html';
             } else {
-                // Load the employer ID from the URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const employerId = urlParams.get('employer');
 
-                // Check if the logged-in user matches the employer ID
                 if (user.uid !== employerId) {
                     window.location.href = 'employer_login.html';
                 } else {
-                    // Construct the full URL for the employee form link
-                    const link = `${window.location.origin}/index.html?employer=${employerId}`; // Use full URL
+                    currentEmployerId = employerId; // Set global employerId
+                    const link = `${window.location.origin}/index.html?e=${employerId}`;
                     document.getElementById('generatedLink').value = link;
+                    await getEmployerTokenBalance(employerId); // Fetch and display balance
                 }
             }
         });
+
+        function showPaymentOverlay() {
+            document.getElementById('paymentOverlay').style.display = 'flex';
+            // Set initial values for token input and total cost
+            document.getElementById('numTokens').value = 200;
+            updateTotalCost();
+        }
+
+        function closePaymentOverlay() {
+            document.getElementById('paymentOverlay').style.display = 'none';
+        }
+
+        function updateTotalCost() {
+            const numTokens = document.getElementById('numTokens').value;
+            const costPerToken = 10; // 2000 Naira / 200 Tokens = 10 Naira per token
+            document.getElementById('totalCost').textContent = (numTokens * costPerToken).toLocaleString();
+        }
+
+        async function payWithPaystack() {
+            const numTokens = parseInt(document.getElementById('numTokens').value);
+            const totalAmountKobo = numTokens * 10 * 100; // Total cost in kobo (Naira * 100)
+            const employerId = auth.currentUser.uid; // Get current employer ID
+
+            if (numTokens < 200) {
+                alert("Minimum purchase is 200 Tokens.");
+                return;
+            }
+
+            if (!employerId) {
+                alert("Employer not logged in.");
+                return;
+            }
+
+            try {
+                // In a real application, you'd generate a reference on your backend
+                // For this example, we'll use a simple timestamp as reference
+                const reference = `TPA_TOKENS_${employerId}_${Date.now()}`;
+
+                const handler = PaystackPop.setup({
+                    key: 'pk_live_8f58236fd51f113de0607deefd4b48e8948fea40', // Replace with your public key
+                    email: auth.currentUser.email, // Use employer's email
+                    amount: totalAmountKobo,
+                    currency: 'NGN',
+                    ref: reference,
+                    channels: ['card', 'bank', 'ussd', 'qr', 'mobile_money'], // Added payment channels
+                    onClose: function() {
+                        alert('Payment window closed.');
+                    },
+                    callback: function(response) {
+                        const paystackReference = response.reference;
+                        // In a real app, send paystackReference to your backend for verification
+                        // and then update the user's token balance.
+                        // For this example, we'll directly update Firestore (less secure for production)
+                        const employerRef = db.collection('employers').doc(employerId);
+                        db.runTransaction((transaction) => {
+                            return transaction.get(employerRef).then((doc) => {
+                                if (!doc.exists) {
+                                    throw "Document does not exist!";
+                                }
+                                const currentTokens = doc.data().tokens || 0;
+                                const newTokens = currentTokens + numTokens;
+                                transaction.update(employerRef, { tokens: newTokens });
+                            });
+                        }).then(() => {
+                            alert(`Payment successful! ${numTokens} tokens added.`);
+                            closePaymentOverlay();
+                            getEmployerTokenBalance(employerId); // Refresh balance
+                        }).catch((e) => {
+                            console.error("Transaction failed: ", e);
+                            alert("Failed to update token balance after payment.");
+                        });
+                    }
+                });
+                handler.openIframe();
+            } catch (error) {
+                console.error("Error initiating Paystack payment:", error);
+                alert("Failed to initiate payment.");
+            }
+        }
 
         // Add logout functionality
         function logout() {
@@ -178,18 +350,78 @@
                             const data = doc.data();
                             const applicationItem = document.createElement('div');
                             applicationItem.className = 'application-item';
-                            applicationItem.innerHTML = `
-                                <h3>${data.fullName}</h3>
-                                <p>Email: ${data.email}</p>
-                                <p>Phone: ${data.phone}</p>
-                                <p>Submitted: ${new Date(data.submittedAt.toDate()).toLocaleString()}</p>
-                                <button onclick="viewApplication('${doc.id}')">View Details</button>
-                            `;
+                            
+                            // Check if the application is unlocked
+                            const isUnlocked = data.isUnlocked || false; // Default to locked
+
+                            let detailsHtml = `<h3>${data.fullName}</h3>`;
+
+                            if (isUnlocked) {
+                                detailsHtml += `
+                                    <p>Email: ${data.email}</p>
+                                    <p>Phone: ${data.phone}</p>
+                                    <p>Submitted: ${new Date(data.submittedAt.toDate()).toLocaleString()}</p>
+                                    <button onclick="viewApplication('${doc.id}')">View Details</button>
+                                `;
+                            } else {
+                                detailsHtml += `
+                                    <p>Details locked. Unlock to view.</p>
+                                    <button onclick="unlockApplication('${doc.id}', '${employerId}')">Unlock for 200 Tokens</button>
+                                `;
+                            }
+
+                            applicationItem.innerHTML = detailsHtml;
                             applicationsList.appendChild(applicationItem);
                         });
                     }, (error) => {
                         console.error("Error loading applications:", error);
                     });
+            }
+        }
+
+        async function unlockApplication(applicationId, employerId) {
+            const unlockCost = 200; // Cost to unlock an application
+            
+            try {
+                const employerRef = db.collection('employers').doc(employerId);
+                const applicationRef = db.collection('applications').doc(applicationId);
+
+                await db.runTransaction(async (transaction) => {
+                    const employerDoc = await transaction.get(employerRef);
+                    const applicationDoc = await transaction.get(applicationRef);
+
+                    if (!employerDoc.exists) {
+                        throw "Employer document does not exist!";
+                    }
+                    if (!applicationDoc.exists) {
+                        throw "Application document does not exist!";
+                    }
+
+                    const currentTokens = employerDoc.data().tokens || 0;
+                    const isUnlocked = applicationDoc.data().isUnlocked || false;
+
+                    if (isUnlocked) {
+                        alert("Application already unlocked.");
+                        return; // Exit transaction if already unlocked
+                    }
+
+                    if (currentTokens < unlockCost) {
+                        alert("Insufficient tokens to unlock this application. Please purchase more tokens.");
+                        return; // Exit transaction if insufficient tokens
+                    }
+
+                    // Deduct tokens and mark application as unlocked
+                    transaction.update(employerRef, { tokens: currentTokens - unlockCost });
+                    transaction.update(applicationRef, { isUnlocked: true });
+                });
+
+                alert("Application unlocked successfully!");
+                // Refresh token balance and applications list
+                await getEmployerTokenBalance(employerId);
+                // No need to explicitly call loadApplications, onSnapshot will handle it
+            } catch (error) {
+                console.error("Error unlocking application:", error);
+                alert(`Failed to unlock application: ${error.message || error}`);
             }
         }
 
@@ -212,9 +444,25 @@
     <div class="header">
         <div class="header-left">
             <img src="tpa.png" alt="TrustPay Agency Logo">
-            <h1>HOME</h1>
         </div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+        <div class="header-right">
+            <span class="token-balance"><span id="employerTokenBalance">0</span>:Token</span>
+            <button class="add-token-btn" onclick="showPaymentOverlay()">+</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div id="paymentOverlay" class="overlay">
+        <div class="overlay-content">
+            <span class="close-btn" onclick="closePaymentOverlay()">&times;</span>
+            <h2>Buy Tokens</h2>
+            <div class="form-group">
+                <label for="numTokens">Number of Tokens (Min 200):</label>
+                <input type="number" id="numTokens" value="200" min="200" step="100" oninput="updateTotalCost()">
+            </div>
+            <p>Total Cost: <span id="totalCost">2000</span> Naira</p>
+            <button onclick="payWithPaystack()">Pay with Paystack</button>
+        </div>
     </div>
 
     <div class="container">

@@ -58,20 +58,8 @@
       <div class="head">
         <div class="brand">
           <!-- Attempt to load b.png first; if it fails, JS will show the fallback SVG -->
-          <img id="logoImg" src="b.png" alt="Logo" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block'">
-          <div id="logoFallback" style="display:none">
-            <!-- simple fallback BOA-like mark -->
-            <svg width="160" height="48" viewBox="0 0 480 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path fill="#c8102e" d="M0 36 L40 0 L80 36 L120 0 L160 36 L200 0 L240 36 L280 0 L320 36 L360 0 L400 36 L400 60 L360 96 L320 60 L280 96 L240 60 L200 96 L160 60 L120 96 L80 60 L40 96 L0 60Z"/>
-              <text x="210" y="76" fill="#004b8d" font-size="28" font-family="Arial">Bank of America</text>
-            </svg>
-          </div>
-          <div>
-            <div class="bank" id="bankName">Bank of America</div>
-            <div class="small" id="branch">Main Branch — Charlotte, NC</div>
-          </div>
-        </div>
-
+          <img id="logoImg" src="b.PNG" alt="Logo" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block'">
+       </div>
         <div class="meta">
           <div><b id="date">October 19, 2025</b></div>
           <div class="small">Receipt #: <b id="receiptNo">BOA-20251019-0001</b></div>

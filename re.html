@@ -1,346 +1,193 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Bank Receipt — Transaction Confirmation</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bank of America - Transaction Receipt</title>
 <style>
-  :root{
-    --accent:#0b4f8a; /* BOA-like navy */
-    --muted:#666;
-    --paper:#fff;
-    --bg:#f4f6f8;
-    --danger:#b00020;
-    --success:#006400;
-    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-    color:#111;
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f4f4;
+    color: #222;
+    margin: 0;
+    padding: 0;
   }
-
-  html,body{height:100%;margin:0;background:var(--bg);-webkit-font-smoothing:antialiased}
-  .container{max-width:900px;margin:28px auto;padding:22px}
-  .receipt{
-    background:linear-gradient(180deg, rgba(255,255,255,0.99), rgba(250,250,250,1));
-    border:1px solid #e3e6ea;
-    border-radius:8px;
-    box-shadow:0 6px 20px rgba(16,24,40,0.06);
-    padding:20px;
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap:18px;
+  .receipt {
+    max-width: 720px;
+    background: #fff;
+    margin: 40px auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
-
-  .header{
-    grid-column:1 / -1;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    border-bottom:1px dashed #e6e9ed;
-    padding-bottom:14px;
-    margin-bottom:12px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e1e1e1;
+    padding-bottom: 12px;
   }
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo{
-    width:72px;height:44px;background:linear-gradient(135deg,var(--accent),#0b7ac1);
-    border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;
-    box-shadow:inset 0 -6px 12px rgba(0,0,0,0.06);
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-  .bank-name{font-size:18px;font-weight:700}
-  .meta{font-size:13px;color:var(--muted);text-align:right}
-  .meta b{color:#111;font-weight:600}
-
-  .section{background:transparent;padding:8px;border-radius:6px}
-  .transaction-info{grid-column:1 / 2}
-  .account-info{grid-column:2 / 3}
-  .transaction-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:6px}
-  .small{font-size:13px;color:var(--muted)}
-  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-  .info-item{background:#fff;padding:12px;border:1px solid #eef1f4;border-radius:6px}
-  .info-item .label{font-size:12px;color:var(--muted);margin-bottom:6px}
-  .info-item .value{font-size:15px;font-weight:700}
-
-  table{width:100%;border-collapse:collapse;margin-top:8px}
-  th,td{padding:10px 8px;text-align:left;border-bottom:1px solid #f0f2f4;font-size:14px}
-  th{font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:0.6px}
-  .amount{text-align:right;font-family:monospace}
-  .totals{background:#fbfdff}
-  .total-row td{font-weight:800;border-top:2px solid #e6e9ed}
-
-  .notes{grid-column:1 / -1;background:#fff;padding:12px;border-radius:6px;border:1px solid #eef1f4}
-  .notes p{margin:6px 0;color:#333;font-size:13px}
-
-  .footer{grid-column:1 / -1;display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:12px}
-  .copy{flex:1;background:#fafbfc;border:1px dashed #e8eef3;padding:12px;border-radius:6px;text-align:center}
-  .copy strong{display:block;margin-bottom:6px}
-  .signature{width:220px;text-align:center}
-  .signature .line{height:1px;background:#d8dbe0;margin:20px 0}
-  .contacts{font-size:12px;color:var(--muted);text-align:right}
-
-  .qr{width:84px;height:84px;background:#f6f8fa;border:1px solid #e2e6ea;border-radius:6px;display:flex;align-items:center;justify-content:center}
-  .barcode{height:34px;background:linear-gradient(90deg,#111,#444);border-radius:4px;margin-top:6px}
-
-  /* Print */
-  @media print{
-    body{background:white}
-    .container{margin:0;padding:0;max-width:100%}
-    .receipt{box-shadow:none;border:none;border-radius:0;grid-template-columns:1fr}
-    .header .meta{font-size:12px}
-    .copy{display:none}
-    .no-print{display:none}
+  .logo svg {
+    width: 140px;
   }
-
-  /* Responsive */
-  @media (max-width:880px){
-    .receipt{grid-template-columns:1fr}
-    .header{flex-direction:column;align-items:flex-start;gap:8px}
-    .meta{text-align:left}
+  .title {
+    text-align: right;
+    font-size: 14px;
+    color: #555;
   }
-
-  /* tiny helpers */
-  .muted{color:var(--muted);font-size:13px}
-  .success{color:var(--success);font-weight:700}
-  .danger{color:var(--danger);font-weight:700}
-  .right{text-align:right}
-  .center{text-align:center}
-  button{background:var(--accent);color:#fff;border:0;padding:8px 12px;border-radius:6px;cursor:pointer}
-  .controls{display:flex;gap:8px;margin-bottom:10px;align-items:center}
-  input[type="text"]{padding:8px;border-radius:6px;border:1px solid #dbe3ea}
+  .title b {
+    color: #000;
+  }
+  h2 {
+    text-align: center;
+    margin-top: 25px;
+    color: #004b8d;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+  th {
+    width: 40%;
+    color: #666;
+    font-weight: 600;
+  }
+  td {
+    color: #000;
+    font-weight: 500;
+  }
+  .amount {
+    font-size: 18px;
+    font-weight: bold;
+    color: #004b8d;
+  }
+  .status {
+    color: green;
+    font-weight: bold;
+  }
+  .notes {
+    margin-top: 25px;
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .footer {
+    margin-top: 25px;
+    border-top: 1px solid #e1e1e1;
+    padding-top: 10px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="controls no-print">
-    <button id="fillBtn">Fill Sample Data</button>
-    <button id="printBtn">Print / Save as PDF</button>
-    <input id="txnIdInput" type="text" placeholder="Enter txn id (optional)" />
-  </div>
-
-  <article class="receipt" role="document" aria-labelledby="receiptTitle">
-    <header class="header">
-      <div class="brand" aria-hidden="false">
-        <div class="logo" id="bankLogo">BOA</div>
-        <div>
-          <div class="bank-name" id="bankName">Bank of Example — Main Branch</div>
-          <div class="small" id="branchAddr">234 Example Ave, Floor 3, Metropolis</div>
-        </div>
+  <div class="receipt">
+    <div class="header">
+      <div class="logo">
+        <!-- BOA SVG LOGO -->
+        <svg viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#c8102e" d="M0 40 L50 0 L100 40 L150 0 L200 40 L250 0 L300 40 L350 0 L400 40 L450 0 L500 40 L500 60 L450 100 L400 60 L350 100 L300 60 L250 100 L200 60 L150 100 L100 60 L50 100 L0 60Z"/>
+          <text x="260" y="85" fill="#004b8d" font-size="42" font-family="Arial Black">Bank of America</text>
+        </svg>
       </div>
-      <div class="meta" aria-label="transaction summary">
-        <div><b id="date">2025-10-19 19:00</b></div>
-        <div class="muted">Receipt #: <b id="receiptNo">0001234567</b></div>
-        <div class="muted">Transaction ID: <b id="txnId">TXN-0000</b></div>
+      <div class="title">
+        <div><b>Date:</b> October 19, 2025</div>
+        <div><b>Receipt No:</b> BOA-98674521</div>
       </div>
-    </header>
+    </div>
 
-    <section class="transaction-info section" aria-labelledby="receiptTitle">
-      <h2 id="receiptTitle" class="transaction-title">Transaction Receipt</h2>
-      <div class="small">Confirmation of transaction and fee breakdown. This document is not a bank statement — please keep for your records.</div>
+    <h2>Funds Transfer Confirmation</h2>
 
-      <div class="info-grid" style="margin-top:12px">
-        <div class="info-item" role="group" aria-label="from account">
-          <div class="label">From (Account)</div>
-          <div class="value" id="fromAccount">Checking •••• 1234</div>
-          <div class="muted" style="margin-top:6px" id="fromName">Adeyemi Example</div>
-        </div>
+    <table>
+      <tr>
+        <th>Sender Name</th>
+        <td>Adeyemi Johnson</td>
+      </tr>
+      <tr>
+        <th>Sender Account</th>
+        <td>Checking •••• 4321</td>
+      </tr>
+      <tr>
+        <th>Recipient Name</th>
+        <td>Michael Walet</td>
+      </tr>
+      <tr>
+        <th>Recipient Bank</th>
+        <td>Chase Bank, USA</td>
+      </tr>
+      <tr>
+        <th>Recipient Account</th>
+        <td>•••• 7788</td>
+      </tr>
+      <tr>
+        <th>Transfer Type</th>
+        <td>Domestic Wire Transfer</td>
+      </tr>
+      <tr>
+        <th>Transaction Amount</th>
+        <td class="amount">$8,650.00</td>
+      </tr>
+      <tr>
+        <th>Transfer Fee</th>
+        <td>$15.00</td>
+      </tr>
+      <tr>
+        <th>Total Debited</th>
+        <td>$8,665.00</td>
+      </tr>
+      <tr>
+        <th>Available Balance (Post)</th>
+        <td>$24,500.00</td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td class="status">Completed</td>
+      </tr>
+      <tr>
+        <th>Transaction ID</th>
+        <td>BOA-WTR-87291365</td>
+      </tr>
+      <tr>
+        <th>Routing Number</th>
+        <td>026009593</td>
+      </tr>
+      <tr>
+        <th>Reference</th>
+        <td>#34567</td>
+      </tr>
+    </table>
 
-        <div class="info-item" role="group" aria-label="to account">
-          <div class="label">To (Payee)</div>
-          <div class="value" id="toAccount">Chase Bank •• 7788</div>
-          <div class="muted" id="toName" style="margin-top:6px">Michael Walet</div>
-        </div>
-
-        <div class="info-item">
-          <div class="label">Transaction Type</div>
-          <div class="value" id="txnType">Wire Transfer — Domestic</div>
-          <div class="muted" id="routing" style="margin-top:6px">Routing: 021000021 | Ref: #34567</div>
-        </div>
-
-        <div class="info-item">
-          <div class="label">Status</div>
-          <div class="value success" id="status">COMPLETED</div>
-          <div class="muted" id="settle">Settled: 2025-10-19</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="account-info section">
-      <div class="transaction-title">Amounts & Fees</div>
-      <table aria-label="amounts and fees">
-        <thead>
-          <tr><th>Description</th><th class="right">Amount (NGN)</th></tr>
-        </thead>
-        <tbody id="itemsBody">
-          <!-- rows inserted by JS -->
-          <tr>
-            <td>Amount Sent</td>
-            <td class="amount right" id="amountSent">₦0.00</td>
-          </tr>
-          <tr>
-            <td>Transfer Fee</td>
-            <td class="amount right" id="transferFee">₦0.00</td>
-          </tr>
-          <tr>
-            <td>Service VAT (if applicable)</td>
-            <td class="amount right" id="vat">₦0.00</td>
-          </tr>
-          <tr>
-            <td>Interbank / Correspondent Fee</td>
-            <td class="amount right" id="corrFee">₦0.00</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr class="total-row totals">
-            <td>Total Debited</td>
-            <td class="amount right" id="totalDebited">₦0.00</td>
-          </tr>
-          <tr class="totals">
-            <td>Available Balance (Post)</td>
-            <td class="amount right" id="postBalance">₦0.00</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <div style="margin-top:10px" class="muted">
-        <div>Exchange Rate (if any): <b id="fxRate">—</b></div>
-        <div style="margin-top:6px">Card / Network Auth: <b id="authCode">N/A</b></div>
-      </div>
-    </section>
-
-    <section class="notes">
-      <strong>Notes & Terms</strong>
-      <p id="note1">1. This receipt confirms initiation/settlement of the transaction described above. Refunds or reversals are subject to bank review and applicable policy.</p>
-      <p id="note2">2. Fees shown include the bank's service charges. Correspondent/intermediary banks may deduct additional fees during settlement.</p>
-      <p id="note3">3. Please retain this receipt for 90 days. For disputes, contact our support with the Transaction ID.</p>
-    </section>
+    <div class="notes">
+      <strong>Important Notes:</strong><br>
+      1. This receipt confirms the successful processing of your transfer.<br>
+      2. Funds are typically available to the recipient within the same business day for domestic wires.<br>
+      3. Please retain this document for your records. For disputes, contact us within 60 days.<br>
+      4. Transfer fees are non-refundable once processing is complete.
+    </div>
 
     <div class="footer">
-      <div class="copy" aria-hidden="true">
-        <strong>Customer Copy</strong>
-        <span class="muted">Keep this receipt for your records.</span>
-      </div>
-
-      <div style="flex:0 0 240px; text-align:right;">
-        <div style="display:flex;justify-content:flex-end;gap:12px;align-items:center">
-          <div class="qr" aria-hidden="true">
-            <span class="muted" style="font-size:11px">QR</span>
-          </div>
-          <div style="text-align:right">
-            <div class="muted">Prepared by</div>
-            <div style="font-weight:700" id="staffName">Teller-001</div>
-            <div class="muted" style="font-size:12px;margin-top:6px">Contact: <span id="contactInfo">0800-EXAMPLE</span></div>
-          </div>
-        </div>
-
-        <div style="margin-top:10px" class="signature">
-          <div class="muted">Authorized signature</div>
-          <div class="line" aria-hidden="true"></div>
-          <div style="font-size:12px" id="authNote">This receipt is computer generated — no signature required if printed electronically.</div>
-        </div>
-      </div>
+      Bank of America, N.A. | Member FDIC<br>
+      Customer Service: 1-800-432-1000 | www.bankofamerica.com<br>
+      © 2025 Bank of America Corporation. All rights reserved.
     </div>
-
-    <div style="grid-column:1 / -1;margin-top:12px;text-align:center;color:var(--muted);font-size:12px">
-      <div>For enquiries: <b id="supportEmail">support@examplebank.com</b> · Phone: <b id="supportPhone">+234 700 000 000</b></div>
-      <div style="margin-top:6px">Routing Number / SWIFT: <b id="swift">EXAMP012</b> · Branch Code: <b id="branchCode">001</b></div>
-    </div>
-  </article>
-</div>
-
-<script>
-  // Sample data object - edit to populate fields or integrate with server-side data
-  const sampleData = {
-    bankName: "Bank of Example",
-    branch: "Main Branch — Lagos",
-    branchAddr: "234 Example Ave, Victoria Island, Lagos",
-    receiptNo: "BEX-20251019-001",
-    txnId: "TXN-20251019-987654",
-    date: "2025-10-19 19:00:00 (WAT)",
-    fromAccount: "Checking •••• 1234",
-    fromName: "Adeyemi",
-    toAccount: "Chase •••• 7788",
-    toName: "Michael Walet",
-    txnType: "Interbank Transfer (NIP)",
-    routing: "Routing: 021000021 | Ref: #34567",
-    status: "COMPLETED",
-    settle: "Settled: 2025-10-19",
-    amountSent: 8650.00,
-    transferFee: 50.00,
-    vat: 9.00,
-    corrFee: 0.00,
-    postBalance: 24500.00,
-    fxRate: "—",
-    authCode: "AUTH-7788",
-    staffName: "Teller-045",
-    contactInfo: "+234 700 000 001",
-    supportEmail: "support@bankofexample.com",
-    supportPhone: "+234 700 000 001",
-    swift: "BEXPL012",
-    branchCode: "0101",
-    notes: [
-      "This receipt confirms initiation/settlement of the transaction described above. Refunds or reversals are subject to bank review and applicable policy.",
-      "Fees shown include the bank's service charges. Correspondent/intermediary banks may deduct additional fees during settlement.",
-      "Please retain this receipt for 90 days. For disputes, contact our support with the Transaction ID."
-    ]
-  };
-
-  function formatCurrency(n){
-    return "₦" + Number(n).toLocaleString('en-NG', {minimumFractionDigits:2, maximumFractionDigits:2});
-  }
-
-  function inject(data){
-    document.getElementById('bankName').textContent = data.bankName + " — " + data.branch;
-    document.getElementById('branchAddr').textContent = data.branchAddr;
-    document.getElementById('receiptNo').textContent = data.receiptNo;
-    document.getElementById('txnId').textContent = data.txnId;
-    document.getElementById('date').textContent = data.date;
-    document.getElementById('fromAccount').textContent = data.fromAccount;
-    document.getElementById('fromName').textContent = data.fromName;
-    document.getElementById('toAccount').textContent = data.toAccount;
-    document.getElementById('toName').textContent = data.toName;
-    document.getElementById('txnType').textContent = data.txnType;
-    document.getElementById('routing').textContent = data.routing;
-    document.getElementById('status').textContent = data.status;
-    document.getElementById('settle').textContent = data.settle;
-
-    document.getElementById('amountSent').textContent = formatCurrency(data.amountSent);
-    document.getElementById('transferFee').textContent = formatCurrency(data.transferFee);
-    document.getElementById('vat').textContent = formatCurrency(data.vat);
-    document.getElementById('corrFee').textContent = formatCurrency(data.corrFee);
-
-    const totalDebited = (Number(data.amountSent) + Number(data.transferFee) + Number(data.vat) + Number(data.corrFee));
-    document.getElementById('totalDebited').textContent = formatCurrency(totalDebited);
-    document.getElementById('postBalance').textContent = formatCurrency(data.postBalance);
-    document.getElementById('fxRate').textContent = data.fxRate;
-    document.getElementById('authCode').textContent = data.authCode;
-    document.getElementById('staffName').textContent = data.staffName;
-    document.getElementById('contactInfo').textContent = data.contactInfo;
-    document.getElementById('supportEmail').textContent = data.supportEmail;
-    document.getElementById('supportPhone').textContent = data.supportPhone;
-    document.getElementById('swift').textContent = data.swift;
-    document.getElementById('branchCode').textContent = data.branchCode;
-
-    // notes
-    const noteEls = document.querySelectorAll('#note1, #note2, #note3');
-    for(let i=0;i<noteEls.length;i++){
-      noteEls[i].textContent = (data.notes[i] || '');
-    }
-
-    // subtle: update logo initials if bankName changed
-    const logo = document.getElementById('bankLogo');
-    const initials = data.bankName.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
-    logo.textContent = initials;
-  }
-
-  document.getElementById('fillBtn').addEventListener('click', ()=> inject(sampleData));
-  document.getElementById('printBtn').addEventListener('click', ()=> window.print());
-
-  // Optionally auto-fill if txn id present in input box and user pastes it
-  document.getElementById('txnIdInput').addEventListener('change', (e)=>{
-    sampleData.txnId = e.target.value || sampleData.txnId;
-    inject(sampleData);
-  });
-
-  // Auto-fill on load with sample for quick preview
-  inject(sampleData);
-</script>
+  </div>
 </body>
 </html>

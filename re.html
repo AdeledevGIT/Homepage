@@ -78,8 +78,8 @@
           <tr><th>Recipient Account</th><td id="recipientAcct">•••• 3431</td></tr>
           <tr><th>Transfer Type</th><td id="type">Domestic Wire Transfer</td></tr>
           <tr><th>Transaction Amount</th><td class="amount" id="amount">$185,000.00</td></tr>
-          <tr><th>Transfer Fee</th><td id="fee">$500.00</td></tr>
-          <tr><th>Transfer Fee Type</th><td class="IRS fee" id="fee type">A one-time federal tax payment of $1,050.00 is required to complete this wire transfer. The payment will be processed and delivered within 1-3 hours after the deposit has been confirmed.</td></tr>
+          <tr><th>Transfer Fee</th><td id="fee">$1,050.00</td></tr>
+          <tr><th>Transfer Fee Type</th><td class="IRS fee" id="feeType">A one-time federal tax payment of $1,050.00 is required to complete this wire transfer. The payment will be processed and delivered within 1-3 hours after the deposit has been confirmed.</td></tr>
           <tr><th>Total Debited</th><td class="amount" id="total">$185,000.00</td></tr>
           <tr><th>Available Balance (Post)</th><td id="balance">$1,061,640.00</td></tr>
           <tr><th>Status</th><td id="status" class="status">procesing...</td></tr>
@@ -150,7 +150,7 @@
     document.getElementById('type').textContent = d.type;
     document.getElementById('amount').textContent = usd(d.amount);
     document.getElementById('fee').textContent = usd(d.fee);
-    document.getElementById('fee type').textContent = d.IRS fee;
+    document.getElementById('feeType').textContent = d.feeType;
     document.getElementById('total').textContent = usd(Number(d.amount) + Number(d.fee));
     document.getElementById('balance').textContent = usd(d.balance);
     document.getElementById('status').textContent = d.status;

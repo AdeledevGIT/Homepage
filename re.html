@@ -1,193 +1,205 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bank of America - Transaction Receipt</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Bank Receipt — BOA Style (Uses b.png logo)</title>
 <style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f4f4f4;
-    color: #222;
-    margin: 0;
-    padding: 0;
+  :root{
+    --blue:#004b8d;
+    --red:#c8102e;
+    --muted:#666;
+    --bg:#f4f6f8;
+    font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
   }
-  .receipt {
-    max-width: 720px;
-    background: #fff;
-    margin: 40px auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  html,body{height:100%;margin:0;background:var(--bg);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px;margin:36px auto;padding:18px}
+  .card{
+    background:#fff;border:1px solid #e2e6ea;border-radius:8px;padding:22px;box-shadow:0 6px 18px rgba(12,24,40,0.06);
   }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #e1e1e1;
-    padding-bottom: 12px;
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo svg {
-    width: 140px;
-  }
-  .title {
-    text-align: right;
-    font-size: 14px;
-    color: #555;
-  }
-  .title b {
-    color: #000;
-  }
-  h2 {
-    text-align: center;
-    margin-top: 25px;
-    color: #004b8d;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 25px;
-  }
-  th, td {
-    text-align: left;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-  }
-  th {
-    width: 40%;
-    color: #666;
-    font-weight: 600;
-  }
-  td {
-    color: #000;
-    font-weight: 500;
-  }
-  .amount {
-    font-size: 18px;
-    font-weight: bold;
-    color: #004b8d;
-  }
-  .status {
-    color: green;
-    font-weight: bold;
-  }
-  .notes {
-    margin-top: 25px;
-    background: #fafafa;
-    border: 1px solid #eee;
-    border-radius: 6px;
-    padding: 15px;
-    font-size: 13px;
-    color: #444;
-    line-height: 1.6;
-  }
-  .footer {
-    margin-top: 25px;
-    border-top: 1px solid #e1e1e1;
-    padding-top: 10px;
-    font-size: 12px;
-    color: #666;
-    text-align: center;
-  }
+
+  /* header */
+  .head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eef2f5;padding-bottom:16px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand img{height:48px;width:auto;display:block}
+  .brand .bank{font-size:18px;font-weight:700;color:var(--blue)}
+  .meta{text-align:right;color:var(--muted);font-size:13px}
+  .meta b{color:#111;font-weight:700}
+
+  /* title */
+  h1{font-size:16px;color:var(--blue);text-align:center;margin:18px 0 8px}
+
+  /* details */
+  table{width:100%;border-collapse:collapse;margin-top:8px}
+  th,td{padding:10px 8px;text-align:left;border-bottom:1px solid #f5f7f9;font-size:14px;vertical-align:top}
+  th{width:42%;color:var(--muted);font-weight:700;text-transform:none;font-size:13px}
+  td{color:#111;font-weight:600}
+  .amount{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;font-size:16px;color:var(--blue)}
+  .status{color:#007a3d;font-weight:800}
+
+  /* notes & instructions */
+  .notes{margin-top:14px;background:#fbfdff;border:1px solid #e8f0f7;border-radius:6px;padding:12px;color:#223}
+  .instructions{margin-top:12px;background:#fff7e6;border:1px solid #ffe6b3;border-radius:6px;padding:12px;color:#6b4f00;font-size:14px}
+  .instructions ol{margin:8px 0 0;padding-left:18px}
+  .small{font-size:13px;color:var(--muted)}
+
+  /* footer */
+  .footer{margin-top:18px;border-top:1px solid #eef2f5;padding-top:12px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+  .controls{display:flex;gap:8px}
+  button{background:var(--blue);color:#fff;border:0;padding:8px 12px;border-radius:6px;cursor:pointer;font-weight:600}
+  .print-hide{display:inline-block}
+  @media print{.print-hide{display:none} .wrap{margin:0;padding:0} .card{box-shadow:none;border-radius:0}}
 </style>
 </head>
 <body>
-  <div class="receipt">
-    <div class="header">
-      <div class="logo">
-        <!-- BOA SVG LOGO -->
-        <svg viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#c8102e" d="M0 40 L50 0 L100 40 L150 0 L200 40 L250 0 L300 40 L350 0 L400 40 L450 0 L500 40 L500 60 L450 100 L400 60 L350 100 L300 60 L250 100 L200 60 L150 100 L100 60 L50 100 L0 60Z"/>
-          <text x="260" y="85" fill="#004b8d" font-size="42" font-family="Arial Black">Bank of America</text>
-        </svg>
+  <div class="wrap">
+    <div class="card" role="document" aria-label="Bank transaction receipt">
+
+      <div class="head">
+        <div class="brand">
+          <!-- Attempt to load b.png first; if it fails, JS will show the fallback SVG -->
+          <img id="logoImg" src="b.png" alt="Logo" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block'">
+          <div id="logoFallback" style="display:none">
+            <!-- simple fallback BOA-like mark -->
+            <svg width="160" height="48" viewBox="0 0 480 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path fill="#c8102e" d="M0 36 L40 0 L80 36 L120 0 L160 36 L200 0 L240 36 L280 0 L320 36 L360 0 L400 36 L400 60 L360 96 L320 60 L280 96 L240 60 L200 96 L160 60 L120 96 L80 60 L40 96 L0 60Z"/>
+              <text x="210" y="76" fill="#004b8d" font-size="28" font-family="Arial">Bank of America</text>
+            </svg>
+          </div>
+          <div>
+            <div class="bank" id="bankName">Bank of America</div>
+            <div class="small" id="branch">Main Branch — Charlotte, NC</div>
+          </div>
+        </div>
+
+        <div class="meta">
+          <div><b id="date">October 19, 2025</b></div>
+          <div class="small">Receipt #: <b id="receiptNo">BOA-20251019-0001</b></div>
+          <div class="small">Transaction ID: <b id="txnId">BOA-WTR-87291365</b></div>
+        </div>
       </div>
-      <div class="title">
-        <div><b>Date:</b> October 19, 2025</div>
-        <div><b>Receipt No:</b> BOA-98674521</div>
+
+      <h1>Funds Transfer Confirmation</h1>
+
+      <table aria-label="Transaction details">
+        <tbody>
+          <tr><th>Sender Name</th><td id="senderName">Adeyemi Johnson</td></tr>
+          <tr><th>Sender Account</th><td id="senderAcct">Checking •••• 4321</td></tr>
+          <tr><th>Recipient Name</th><td id="recipientName">Michael Walet</td></tr>
+          <tr><th>Recipient Bank</th><td id="recipientBank">Chase Bank (US)</td></tr>
+          <tr><th>Recipient Account</th><td id="recipientAcct">•••• 7788</td></tr>
+          <tr><th>Transfer Type</th><td id="type">Domestic Wire Transfer</td></tr>
+          <tr><th>Transaction Amount</th><td class="amount" id="amount">$8,650.00</td></tr>
+          <tr><th>Transfer Fee</th><td id="fee">$15.00</td></tr>
+          <tr><th>Total Debited</th><td class="amount" id="total">$8,665.00</td></tr>
+          <tr><th>Available Balance (Post)</th><td id="balance">$24,500.00</td></tr>
+          <tr><th>Status</th><td id="status" class="status">Completed</td></tr>
+          <tr><th>Routing / ABA</th><td id="routing">026009593</td></tr>
+          <tr><th>Reference / Note</th><td id="reference">Invoice #34567</td></tr>
+        </tbody>
+      </table>
+
+      <div class="notes" id="notes">
+        <strong>Notes:</strong>
+        <div class="small" style="margin-top:6px">
+          • Correspondent/intermediary banks may deduct additional fees during processing.<br>
+          • This receipt confirms the transfer was processed; final settlement is subject to receiving bank policies.<br>
+          • Keep this receipt for 60 days for dispute/reference.
+        </div>
       </div>
-    </div>
 
-    <h2>Funds Transfer Confirmation</h2>
+      <div class="instructions" aria-label="Instructions">
+        <strong>Instructions / How to use this receipt</strong>
+        <ol>
+          <li><b>Verify recipient details:</b> Confirm the recipient name, bank, and account ending before relying on delivery.</li>
+          <li><b>Save or print:</b> Click <em>Print / Save</em> to produce a PDF or paper copy. Printed receipts are accepted for record-keeping.</li>
+          <li><b>Check settlement:</b> Domestic wires usually settle same business day; contact recipient to confirm funds arrived.</li>
+          <li><b>Dispute / Refund:</b> If you suspect an error, contact Bank of America within 60 days with this Transaction ID: <span id="txnForDispute">BOA-WTR-87291365</span>.</li>
+          <li><b>Contact support:</b> Call 1-800-432-1000 or visit <a href="https://www.bankofamerica.com" target="_blank" rel="noopener">bankofamerica.com</a> for assistance.</li>
+        </ol>
+      </div>
 
-    <table>
-      <tr>
-        <th>Sender Name</th>
-        <td>Adeyemi Johnson</td>
-      </tr>
-      <tr>
-        <th>Sender Account</th>
-        <td>Checking •••• 4321</td>
-      </tr>
-      <tr>
-        <th>Recipient Name</th>
-        <td>Michael Walet</td>
-      </tr>
-      <tr>
-        <th>Recipient Bank</th>
-        <td>Chase Bank, USA</td>
-      </tr>
-      <tr>
-        <th>Recipient Account</th>
-        <td>•••• 7788</td>
-      </tr>
-      <tr>
-        <th>Transfer Type</th>
-        <td>Domestic Wire Transfer</td>
-      </tr>
-      <tr>
-        <th>Transaction Amount</th>
-        <td class="amount">$8,650.00</td>
-      </tr>
-      <tr>
-        <th>Transfer Fee</th>
-        <td>$15.00</td>
-      </tr>
-      <tr>
-        <th>Total Debited</th>
-        <td>$8,665.00</td>
-      </tr>
-      <tr>
-        <th>Available Balance (Post)</th>
-        <td>$24,500.00</td>
-      </tr>
-      <tr>
-        <th>Status</th>
-        <td class="status">Completed</td>
-      </tr>
-      <tr>
-        <th>Transaction ID</th>
-        <td>BOA-WTR-87291365</td>
-      </tr>
-      <tr>
-        <th>Routing Number</th>
-        <td>026009593</td>
-      </tr>
-      <tr>
-        <th>Reference</th>
-        <td>#34567</td>
-      </tr>
-    </table>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:12px">
+        <div class="small">
+          <div><strong>Prepared by:</strong> <span id="preparedBy">Teller-045</span></div>
+          <div style="margin-top:6px">Auth note: <span id="authNote">Computer generated — signature not required.</span></div>
+        </div>
 
-    <div class="notes">
-      <strong>Important Notes:</strong><br>
-      1. This receipt confirms the successful processing of your transfer.<br>
-      2. Funds are typically available to the recipient within the same business day for domestic wires.<br>
-      3. Please retain this document for your records. For disputes, contact us within 60 days.<br>
-      4. Transfer fees are non-refundable once processing is complete.
-    </div>
+        <div style="text-align:right">
+          <div class="controls print-hide">
+            <button id="fillBtn">Fill sample</button>
+            <button id="printBtn">Print / Save</button>
+          </div>
+          <div class="small" style="margin-top:6px">Customer Service: 1-800-432-1000</div>
+        </div>
+      </div>
 
-    <div class="footer">
-      Bank of America, N.A. | Member FDIC<br>
-      Customer Service: 1-800-432-1000 | www.bankofamerica.com<br>
-      © 2025 Bank of America Corporation. All rights reserved.
+      <div class="footer small" style="margin-top:14px">
+        <div>Bank of America, N.A. · Member FDIC</div>
+        <div>© 2025 Bank of America Corporation · www.bankofamerica.com</div>
+      </div>
     </div>
   </div>
+
+<script>
+  // -- Editable sample data (change as needed)
+  const SAMPLE = {
+    bankName: "Bank of America",
+    branch: "Main Branch — Charlotte, NC",
+    date: "October 19, 2025",
+    receiptNo: "BOA-20251019-0001",
+    txnId: "BOA-WTR-87291365",
+    senderName: "Adeyemi Johnson",
+    senderAcct: "Checking •••• 4321",
+    recipientName: "Michael Walet",
+    recipientBank: "Chase Bank (US)",
+    recipientAcct: "•••• 7788",
+    type: "Domestic Wire Transfer",
+    amount: 8650.00,
+    fee: 15.00,
+    balance: 24500.00,
+    status: "Completed",
+    routing: "026009593",
+    reference: "Invoice #34567",
+    preparedBy: "Teller-045",
+    authNote: "Computer generated — signature not required."
+  };
+
+  function usd(n){ return "$" + Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+  function inject(d){
+    document.getElementById('bankName').textContent = d.bankName;
+    document.getElementById('branch').textContent = d.branch;
+    document.getElementById('date').textContent = d.date;
+    document.getElementById('receiptNo').textContent = d.receiptNo;
+    document.getElementById('txnId').textContent = d.txnId;
+    document.getElementById('senderName').textContent = d.senderName;
+    document.getElementById('senderAcct').textContent = d.senderAcct;
+    document.getElementById('recipientName').textContent = d.recipientName;
+    document.getElementById('recipientBank').textContent = d.recipientBank;
+    document.getElementById('recipientAcct').textContent = d.recipientAcct;
+    document.getElementById('type').textContent = d.type;
+    document.getElementById('amount').textContent = usd(d.amount);
+    document.getElementById('fee').textContent = usd(d.fee);
+    document.getElementById('total').textContent = usd(Number(d.amount) + Number(d.fee));
+    document.getElementById('balance').textContent = usd(d.balance);
+    document.getElementById('status').textContent = d.status;
+    document.getElementById('routing').textContent = d.routing;
+    document.getElementById('reference').textContent = d.reference;
+    document.getElementById('preparedBy').textContent = d.preparedBy;
+    document.getElementById('authNote').textContent = d.authNote;
+    document.getElementById('txnForDispute').textContent = d.txnId;
+  }
+
+  // Buttons
+  document.getElementById('fillBtn').addEventListener('click', ()=> inject(SAMPLE));
+  document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+
+  // auto-inject sample on load
+  inject(SAMPLE);
+
+  // accessibility: if b.png fails to load, fallback SVG is already shown via onerror
+  // if you prefer to force using b.png even when missing, remove onerror attribute and ensure b.png exists.
+</script>
 </body>
 </html>

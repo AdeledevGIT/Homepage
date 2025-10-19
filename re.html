@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Bank Receipt — BOA Style (Uses b.png logo)</title>
+<title>Wire Transfer Receipt </title>
 <style>
   :root{
     --blue:#004b8d;
@@ -61,7 +61,7 @@
           <img id="logoImg" src="b.PNG" alt="Logo" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block'">
        </div>
         <div class="meta">
-          <div><b id="date">October 19, 2025</b></div>
+          <div><b id="date">October 20, 2025</b></div>
           <div class="small">Receipt #: <b id="receiptNo">BOA-20251019-0001</b></div>
           <div class="small">Transaction ID: <b id="txnId">BOA-WTR-87291365</b></div>
         </div>
@@ -71,9 +71,9 @@
 
       <table aria-label="Transaction details">
         <tbody>
-          <tr><th>Sender Name</th><td id="senderName">Karen Lynn Kelly</td></tr>
+          <tr><th>Sender Name</th><td id="senderName">Small Business Administration</td></tr>
           <tr><th>Sender Account</th><td id="senderAcct">Checking •••• 4321</td></tr>
-          <tr><th>Recipient Name</th><td id="recipientName">Michael Walet</td></tr>
+          <tr><th>Recipient Name</th><td id="recipientName">Karen Lynn Kelly</td></tr>
           <tr><th>Recipient Bank</th><td id="recipientBank">First State Bank (US)</td></tr>
           <tr><th>Recipient Account</th><td id="recipientAcct">•••• 3431</td></tr>
           <tr><th>Transfer Type</th><td id="type">Domestic Wire Transfer</td></tr>
@@ -115,7 +115,7 @@
   const SAMPLE = {
     bankName: "Bank of America",
     branch: "Main Branch — Charlotte, NC",
-    date: "October 19, 2025",
+    date: "October 20, 2025",
     receiptNo: "BOA-20251019-0001",
     txnId: "BOA-WTR-87291365",
     senderName: "Adeyemi Johnson",

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support Center</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f6f8fa;
+      color: #1f2933;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 20px 0;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    .hero {
+      background: #111827;
+      color: #ffffff;
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      opacity: 0.85;
+      margin-bottom: 25px;
+    }
+
+    .search-box {
+      max-width: 600px;
+      margin: auto;
+      display: flex;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 6px 0 0 6px;
+      outline: none;
+    }
+
+    .search-box button {
+      padding: 14px 20px;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+    }
+
+    .categories {
+      margin: 60px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .category {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      transition: 0.2s ease;
+    }
+
+    .category:hover {
+      transform: translateY(-4px);
+    }
+
+    .category h3 {
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .category p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .contact-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+
+    .contact-box {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      text-align: center;
+    }
+
+    .contact-box h4 {
+      margin-bottom: 8px;
+    }
+
+    .contact-box p {
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .contact-box a {
+      display: inline-block;
+      margin-top: 5px;
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .form-section {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 80px;
+    }
+
+    .form-section h3 {
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: grid;
+      gap: 15px;
+    }
+
+    input, textarea, select {
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    button.submit-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      border-top: 1px solid #e5e7eb;
+      background: #ffffff;
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <h1>Support Center</h1>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h2>How can we help you?</h2>
+      <p>Find answers, explore guides, or contact our support team</p>
+
+      <div class="search-box">
+        <input type="text" placeholder="Search for help articles..." />
+        <button>Search</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <section class="categories">
+      <div class="category">
+        <h3>Account & Profile</h3>
+        <p>Login issues, account settings, and security.</p>
+      </div>
+
+      <div class="category">
+        <h3>Billing & Payments</h3>
+        <p>Invoices, subscriptions, and refunds.</p>
+      </div>
+
+      <div class="category">
+        <h3>Technical Support</h3>
+        <p>Errors, bugs, and system-related issues.</p>
+      </div>
+
+      <div class="category">
+        <h3>Orders & Services</h3>
+        <p>Order tracking, service updates, and delivery.</p>
+      </div>
+    </section>
+
+    <section class="contact-options">
+      <div class="contact-box">
+        <h4>Email Support</h4>
+        <p>Reach us anytime via email.</p>
+        <a href="mailto:support@company.com">support@company.com</a>
+      </div>
+
+      <div class="contact-box">
+        <h4>Live Chat</h4>
+        <p>Chat with a support agent in real-time.</p>
+        <a href="#" onclick="chaport.q('open')">Start Chat</a>
+      </div>
+
+      <div class="contact-box">
+        <h4>Help Center</h4>
+        <p>Browse detailed guides and documentation.</p>
+        <a href="#">Visit Help Center</a>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h3>Submit a Support Request</h3>
+      <form>
+        <input type="text" placeholder="Full Name" required />
+        <input type="email" placeholder="Email Address" required />
+
+        <select required>
+          <option value="">Select Issue Type</option>
+          <option>Account</option>
+          <option>Billing</option>
+          <option>Technical</option>
+          <option>Other</option>
+        </select>
+
+        <textarea placeholder="Describe your issue..." required></textarea>
+
+        <button class="submit-btn">Submit Request</button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    © 2026 Your Company Name. All rights reserved.
+  </footer>
+
+  <!-- Begin of Chaport Live Chat code -->
+  <script type="text/javascript">
+    (function(w,d,v3){
+      w.chaportConfig = {
+        appId : '695ffb7146024bcc3f97be4d'
+      };
+      if(w.chaport) return;
+      v3 = w.chaport = {};
+      v3._q = [];
+      v3._l = {};
+      v3.q = function(){ v3._q.push(arguments); };
+      v3.on = function(e,fn){
+        if(!v3._l[e]) v3._l[e] = [];
+        v3._l[e].push(fn);
+      };
+      var s = d.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://app.chaport.com/javascripts/insert.js';
+      var ss = d.getElementsByTagName('script')[0];
+      ss.parentNode.insertBefore(s, ss);
+    })(window, document);
+  </script>
+  <!-- End of Chaport Live Chat code -->
+
+</body>
+</html>
